@@ -2,7 +2,6 @@ import React from 'react'
 import PostAuthor from '../components/PostAuthor'
 import { Link } from 'react-router-dom'
 import SystemDesignThumbnail from '../images/blog1.png'
-import BigONotationThumbnail from '../images/blog2.png'
 
 function PostDetail() {
   return (

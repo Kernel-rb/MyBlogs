@@ -1,8 +1,32 @@
 import React from 'react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-function Login() {
+const Login = () => {
+  const [userData, setUserData] = useState({
+    email : '',
+    password:'',
+  })
+
+  const changeInputHandler = (e) => {
+    setUserData(prevState => {
+      return {...prevState, [e.target.name]: e.target.value}
+    })
+  }
+
   return (
-    <div>Login</div>
+    <section className='register'>
+      <div className="container">
+        <h2>Sign In</h2>
+        <form className="form login__form">
+          <p className="form__error-message">An error occurred 🦊 </p>
+          <input type="text" placeholder='Email  ' name="email" value={userData.email} onChange={changeInputHandler}  />
+          <input type="password" placeholder='Password ' name="password" value={userData.password} onChange={changeInputHandler}  />
+          <button type="submit"className='btn primary'>Login</button>
+        </form>
+        <small> Don't have an account ? <Link to={"/register"}>Sign Up </Link></small>
+      </div>
+    </section>
   )
 }
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Logo from "..//images//logo.png"
-import { FaBars } from "react-icons/fa"
 import {AiOutlineClose} from "react-icons/ai"
 
 
@@ -13,7 +12,7 @@ function Header() {
           <img src={Logo } alt="Logo" />
         </Link>
         <ul className='nav__menu'>
-          <li><Link to="/profile">Kernel </Link></li>
+          <li><Link to="/profile/kernel"> Latest Posts </Link></li>
           <li><Link to="/create">Create Post</Link></li>
           <li><Link to="/authors">Authors</Link></li>
           <li><Link to="/logout">Logout</Link></li>
