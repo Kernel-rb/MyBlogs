@@ -128,6 +128,22 @@ section{
     background: var(--color-gray-900);
     color : var(--color-white);
 }
+
+/* --------------------- Error Page : ------------------ */
+.center{
+    text-align: center;
+    padding-top: 5rem;
+    margin-inline: center;
+    display: block;
+    width: 100%;
+}
+
+.error-page h2{
+    margin-bottom: 3rem;
+
+}
+
+
 /* -------------------------Navbar--------------------------  */
 
 nav {
@@ -166,3 +182,110 @@ nav {
 .nav__toggle-btn{
     display: none;
 }
+
+
+/* --------------------------- Footer -------------------- */
+footer{
+    background-color: var(--color-gray-900);
+    margin-top:  6rem;
+    padding-top: 6rem;
+}
+
+
+.footer__categories{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+
+.footer__categories a {
+    background: var(--color-gray-700);
+    color : var(--color-white);
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--raduis-2);
+    transition: var(--transition);
+}
+
+.footer__categories a:hover{
+    background: var(--color-white);
+    color : var(--color-gray-700);
+}
+
+
+.footer__social{
+    text-align: center;
+    border-top: 2px solid var(--color-gray-700);
+    padding: 1rem;
+    color: var(--color-white);
+    font-weight: 300;
+     margin-bottom: 4rem;
+}
+
+.footer__social a {
+    color: var(--color-white);
+    margin-right: 1rem;
+}
+
+/* ------------------- Home Pages  ----------------------- */
+
+/* Post :  */
+
+.posts__container{
+    display: grid;
+    grid-template-columns: repeat(3 , 1fr);
+    gap: 4rem;
+}
+.post {
+    background: var(--color-white);
+    padding: 1rem;
+    border-radius: var(--raduis-4);
+    padding-bottom: 2rem;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.post:hover{
+    box-shadow: 0 1.5rem 2rem  rgba(0 , 0 , 0 , 0.1);
+}
+
+.post__thumbnail{
+    border-radius: var(--raduis-3);
+    overflow: hidden;
+    height: 16rem;
+}
+
+.post__content{
+    margin-top : 1.5rem;
+}
+
+.post__content h3{
+    margin: 1rem 0 0.6rem;
+}
+
+.post_footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 2rem;
+}
+
+
+.post__author{
+    display: flex;
+    gap:1rem;
+    align-items: flex-start;
+}
+
+.post__author-avatar{
+    width: 2.5rem;
+    aspect-ratio: 1/1;
+    border-radius: var(--raduis-2);
+    overflow: hidden;
+}
+
+
+
+/* -------------------  Post  Detail ----------------------- */
