@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const HttpError = require("../models/errorModel");
 const User = require('../models/userModel');
 
+
 // ================= register user =================
 // Post : api/users/register
 // Unprotected
@@ -78,14 +79,32 @@ const loginUser = async (req, res, next) => {
 // Post : api/users/:id 
 // protected
 const getUser = async (req, res, next) => {
-    res.json('This is the get user profile route');
+    try {
+        const { id } = req.params;
+        const user = await User.findById(id).select('-password');
+        if (!user) {
+            return next(new HttpError('User not found 🦊', 404));
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        console.error('Error getting user:', error);
+        return next(new HttpError('Getting user failed, please try again 🦊', 422));
+    }
 }
 
 // ================= change user avaatr =================
 // Post : api/users/change-avatar
 // protected
 const chnageAvatar = async (req, res, next) => {
-    res.json('This is the chnage avatr of user route');
+    try {
+        res.json(req.file)
+        console.log(req.file);
+
+        
+    }catch (error) {
+        console.error('Error changing avatar:', error);
+        return next(new HttpError('Changing avatar failed, please try again 🦊', 422));
+    }
 }
 
 
@@ -93,14 +112,25 @@ const chnageAvatar = async (req, res, next) => {
 // Post : api/users/edit-user
 // protected
 const editUser = async (req, res, next) => {
-    res.json('This is the change the user detail route');
+    try {
+        
+    }catch (error) {
+        console.error('Error editing user:', error);
+        return next(new HttpError('Editing user failed, please try again 🦊', 422));
+    }
 }
 
 // ================= Get uthors=================
 // Post : api/users/authors
 // Unprotected
 const getAuthors = async (req, res, next) => {
-    res.json('Get all Authorss route');
+    try {
+        const authors = await User.find().select('-password');
+        res.status(200).json(authors);
+    }catch(error) {
+        console.error('Error getting authors:', error);
+        return next(new HttpError('Getting authors failed, please try again 🦊', 422));
+    }
 }
 
 
