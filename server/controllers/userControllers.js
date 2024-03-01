@@ -2,6 +2,9 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const HttpError = require("../models/errorModel");
 const User = require('../models/userModel');
+const fs = require('fs');
+const path = require('path');
+const { v4: uuid } = require('uuid');
 
 
 // ================= register user =================
@@ -97,10 +100,36 @@ const getUser = async (req, res, next) => {
 // protected
 const chnageAvatar = async (req, res, next) => {
     try {
-        res.json(req.file)
-        console.log(req.file);
+        if(!req.files) {
+            return next(new HttpError('No file uploaded 🦊', 422));
+        }
+        const user = await User.findById(req.user.id);
+        if(!user.avatar) {
+            fs.unlinkSync(path.join(__dirname, `../uploads/${user.avatar}`)
+                , (err) => { 
+                    return next(new HttpError('Deleting old avatar failed, please try again 🦊', 422));
+                });
+        }
 
-        
+        const { avatar } = req.files;
+        if (avatar.size > 500000) {
+            return next(new HttpError('Size too large 🦊', 422));
+        }
+        let fileName;
+        fileName = avatar.name;
+        let splitName = fileName.split('.');
+        let newFileName = splitName[0] + uuid() + '.' + splitName[splitName.length - 1];
+        avatar.mv(path.join(__dirname, `../uploads/${newFileName}`), async (err) => {
+            if (err) {
+                return next(new HttpError('Uploading avatar failed, please try again 🦊', 422));
+            }
+            const updateAvatar = await User.findByIdAndUpdate(req.user.id, { avatar: newFileName }, { new: true });
+            if(!updateAvatar) {
+                return next(new HttpError('Changing avatar failed, please try again 🦊', 422));
+            }
+            res.status(200).json(updateAvatar);
+        });
+
     }catch (error) {
         console.error('Error changing avatar:', error);
         return next(new HttpError('Changing avatar failed, please try again 🦊', 422));
