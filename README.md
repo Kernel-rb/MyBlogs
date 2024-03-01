@@ -1,6 +1,9 @@
 # MyBlogs 📝
 
-This repository contains code for a client-server application for managing blogs.
+This repository contains code for a simple blogging application. The application is built using the MERN stack (MongoDB, Express, React, Node.js). The application is still a work in progress and is not yet complete.
+
+- status: 🚧 Work in Progress 🚧
+- Stack: React, Node.js, Express, MongoDB , JWT , Bcrypt
 
 ## Directory Structure 📂
 
