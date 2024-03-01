@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const HttpError = require("../models/errorModel");
 const User = require('../models/userModel');
 
@@ -52,7 +53,21 @@ const registerUser = async (req, res, next) => {
 // Unprotected
 const loginUser = async (req, res, next) => {
     try {
-        
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return next(new HttpError('All fields are required 🦊', 422));
+        }
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return next(new HttpError('Invalid credentials 🦊', 422));
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return next(new HttpError('Invalid credentials 🦊', 422));
+        }
+        const { _id: id, name } = user;
+        const token = jwt.sign({ id, name }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        res.status(200).json({ token, user: { id, name }  });
     } catch (error) {
         console.error('Error logging in user:', error);
         return next(new HttpError('Logging in user failed, please try again 🦊', 422));
