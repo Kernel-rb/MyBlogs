@@ -19,7 +19,7 @@ router.get('/:id', getPost)
 router.get('/categories/:category', getCatPosts)
 router.get('/users/:id', getUserPosts)
 router.patch('/:id', authMiddleware, editPost)
-router.post('/:id', authMiddleware , deletePost)
+router.delete('/:id', authMiddleware , deletePost)
 
 
 module.exports = router;
