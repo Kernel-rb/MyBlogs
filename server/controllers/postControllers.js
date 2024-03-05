@@ -5,6 +5,20 @@ const createPost = async (req, res, next) => {
     res.json("Create Post 🦊 ")
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Get All Posts
 // Get : api/posts
 // UnProtected 
