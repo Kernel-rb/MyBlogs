@@ -8,17 +8,18 @@ const {
     getUserPosts,
     editPost,
     deletePost
-}= require('../,controllers/postController');
+}= require('../controllers/postControllers');
 
+const authMiddleware = require('../middleware/authMiddleware');
 const router = Router();
 
-router.post('/', createPost)
+router.post('/', authMiddleware , createPost)
 router.get('/', getPosts)
 router.get('/:id', getPost)
 router.post('/categories/:category', getCatPosts)
 router.post('/users/:id', getUserPosts)
-router.patch('/:id', editPost)
-router.post('/:id', deletePost)
+router.patch('/:id', authMiddleware, editPost)
+router.post('/:id', authMiddleware , deletePost)
 
 
 module.exports = router;
