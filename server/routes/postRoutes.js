@@ -17,7 +17,7 @@ router.post('/', authMiddleware , createPost)
 router.get('/', getPosts)
 router.get('/:id', getPost)
 router.get('/categories/:category', getCatPosts)
-router.post('/users/:id', getUserPosts)
+router.get('/users/:id', getUserPosts)
 router.patch('/:id', authMiddleware, editPost)
 router.post('/:id', authMiddleware , deletePost)
 
