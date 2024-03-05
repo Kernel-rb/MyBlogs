@@ -47,3 +47,14 @@ const editPost = async (req, res, next) => {
 const deletePost = async (req, res, next) => {
     res.json("Delete Post 🦊 ")
 }
+
+
+module.exports = {
+    createPost,
+    getPosts,
+    getPost,
+    getCatPosts,
+    getUserPosts,
+    editPost,
+    deletePost
+}
