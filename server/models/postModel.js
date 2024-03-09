@@ -9,7 +9,7 @@ const postSchema = new Schema({
     },
     description: { type: String, required: true },
     thumbnail: { type: String, required: true },
-    creator: { type: Schema.Types.ObjectId, ref: "User"},  
+    creator: { type: Schema.Types.ObjectId, ref: "User" },
 }, { timestamps: true });
 
 module.exports = model('Post', postSchema);

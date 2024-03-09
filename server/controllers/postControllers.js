@@ -12,52 +12,41 @@ const { v4: uuidv4 } = require('uuid');
 const createPost = async (req, res, next) => {
     try {
         let { title, category, description } = req.body;
-        const thumbnail = req.file;
-
-        if (!title || !category || !description || !thumbnail) {
-            const error = new HttpError('All fields are required 🦊', 422);
-            return next(error);
+        if (!title || !category || !description || !req.files) {
+            return next(new HttpError('Please fill all the fields and choose thumbnail', 422));
         }
-
+        const { thumbnail } = req.files;
         if (thumbnail.size > 2000000) {
-            const error = new HttpError('Image size should be less than 2MB 🦊', 422);
-            return next(error);
+            return next(new HttpError('Thumbnail size should be less than 2MB', 422));
         }
-
         let fileName = thumbnail.name;
-        let splittedFilename = fileName.split('.');
-        let newFilename = splittedFilename[0] + uuidv4(); // Fixed uuid() to uuidv4()
-        thumbnail.mv(path.join(__dirname, '..', 'uploads', newFilename), async (e) => {
-            if (e) {
-                const error = new HttpError('Image upload failed 🦊', 500); // Changed status code to 500
-                return next(error);
+        let splittedFileName = fileName.split('.');
+        let newFileName = splittedFileName[0] + uuidv4() + '.' + splittedFileName[splittedFileName.length - 1];
+        thumbnail.mv(path.join(__dirname, `../uploads/${newFileName}`), async (err) => {
+            if (err) {
+                return next(new HttpError(err));
             } else {
                 const newPost = await Post.create({
                     title,
                     category,
                     description,
-                    thumbnail: newFilename,
+                    thumbnail: newFileName,
                     creator: req.user.id
                 });
-
                 if (!newPost) {
-                    const error = new HttpError('Creating Post Failed, Please try again 🦊', 422);
-                    return next(error);
+                    return next(new HttpError('Post not created', 422));
                 }
-
                 const currentUser = await User.findById(req.user.id);
-                const userPostCount = currentUser.postCount + 1; // Increment postCount properly
-                await User.findByIdAndUpdate(req.user.id, { postCount: userPostCount });
-
-                res.status(201).json({
-                    newPost,
-                    message: 'Post Created Successfully 🦊'
-                });
+                if (!currentUser) {
+                    return next(new HttpError('User not found', 422));
+                }
+                const userPostCount = currentUser.posts + 1;
+                await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
+                res.status(201).json(newPost);
             }
         });
-    } catch (err) {
-        const error = new HttpError('Creating Post Failed, Please try again 🦊', 500);
-        return next(error);
+    } catch (error) {
+        return next(new HttpError(error));
     }
 }
 
