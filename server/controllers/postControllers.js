@@ -171,6 +171,7 @@ const deletePost = async (req, res, next) => {
             return next(new HttpError('Post not found', 404));
         }
         const fileName = post?.thumbnail;
+        if(req.user.id == post.creator) {
         fs.unlink(path.join(__dirname, `../uploads/${fileName}`), async (err) => {
             if (err) {
                 return next(new HttpError(err));
@@ -185,7 +186,10 @@ const deletePost = async (req, res, next) => {
 
             }
         });
-        res.json(`Post with id: ${postId} deleted`)
+            res.json(`Post with id: ${postId} deleted`)
+        } else {
+            return next(new HttpError('You are not authorized to delete this post', 403));
+        }
     } catch (error) {
         return next(new HttpError(error));
     }
