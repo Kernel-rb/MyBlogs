@@ -161,7 +161,34 @@ const editPost = async (req, res, next) => {
 // Delete: api/posts/:id
 // Protected
 const deletePost = async (req, res, next) => {
-    res.json("Delete Post 🦊");
+    try {
+        const postId = req.params.id;
+        if (!postId) {
+            return next(new HttpError('Post not found', 404));
+        }
+        const post = await Post.findById(postId);
+        if (!post) {
+            return next(new HttpError('Post not found', 404));
+        }
+        const fileName = post?.thumbnail;
+        fs.unlink(path.join(__dirname, `../uploads/${fileName}`), async (err) => {
+            if (err) {
+                return next(new HttpError(err));
+            } else {
+                await Post.findByIdAndDelete(postId);
+                const currentUser = await User.findById(req.user.id);
+                if (!currentUser) {
+                    return next(new HttpError('User not found', 422));
+                }
+                const userPostCount = currentUser?.posts - 1;
+                await User.findByIdAndUpdate(req.user.id, { posts: userPostCount });
+
+            }
+        });
+        res.json(`Post with id: ${postId} deleted`)
+    } catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 module.exports = {
