@@ -54,7 +54,15 @@ const createPost = async (req, res, next) => {
 // Get: api/posts
 // UnProtected 
 const getPosts = async (req, res, next) => {
-    res.json("Get all Posts 🦊");
+    try {
+        const posts = await Post.find().sort({ UpdatedAt: -1 });
+        if (!posts) {
+            return next(new HttpError('No posts found', 404));
+        }
+        res.status(200).json(posts);
+    }catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 // Get Single Posts
