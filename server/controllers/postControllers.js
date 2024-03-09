@@ -55,7 +55,7 @@ const createPost = async (req, res, next) => {
 // UnProtected 
 const getPosts = async (req, res, next) => {
     try {
-        const posts = await Post.find().sort({ UpdatedAt: -1 });
+        const posts = await Post.find().sort({ createdAt: -1});
         if (!posts) {
             return next(new HttpError('No posts found', 404));
         }
@@ -69,7 +69,16 @@ const getPosts = async (req, res, next) => {
 // Get: api/posts/:id
 // UnProtected 
 const getPost = async (req, res, next) => {
-    res.json("Get Single Post 🦊");
+    try {
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post) {
+            return next(new HttpError('Post not found', 404));
+        }
+        res.status(200).json(post);
+    }catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 // Get Post by category
