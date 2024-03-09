@@ -112,15 +112,49 @@ const getUserPosts = async (req, res, next) => {
         return next(new HttpError(error));
     }
 }
-
-
-
-
 // Edit Post
 // Patch: api/posts/:id
 // Protected
 const editPost = async (req, res, next) => {
-    res.json("Edit Post 🦊");
+    try {
+        let fileName;
+        let newFileName;
+        let updatedPost;
+        const postId = req.params.id;
+        let { title, category, description } = req.body;
+        if (!title || !category || description < 12) {
+            return next(new HttpError('Please fill all the fields', 422));
+        }
+        if (!req.files) {
+            updatedPost = await Post.findByIdAndUpdate(postId, { title, category, description }, { new: true });
+        } else {
+            const oldPost = await Post.findById(postId);
+            fs.unlink(path.join(__dirname, `../uploads/${oldPost.thumbnail}`), async (err) => {
+                if (err) {
+                    return next(new HttpError(err));
+                }
+            });
+            const { thumbnail } = req.files;
+            if (thumbnail.size > 2000000) {
+                return next(new HttpError('Thumbnail size should be less than 2MB', 422));
+            }
+            fileName = thumbnail.name;
+            let splittedFileName = fileName.split('.');
+            newFileName = splittedFileName[0] + uuidv4() + '.' + splittedFileName[splittedFileName.length - 1];
+            thumbnail.mv(path.join(__dirname, `../uploads/${newFileName}`), async (err) => {
+                if (err) {
+                    return next(new HttpError(err));
+                }
+            });
+            updatedPost = await Post.findByIdAndUpdate(postId, { title, category, description, thumbnail: newFileName }, { new: true });
+        }
+        if (!updatedPost) {
+            return next(new HttpError('Post not updated', 422));
+        }
+        res.status(200).json(updatedPost);
+    } catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 // Delete Post
