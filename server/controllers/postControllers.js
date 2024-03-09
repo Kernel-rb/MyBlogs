@@ -101,8 +101,20 @@ const getCatPosts = async (req, res, next) => {
 // Get: api/posts/users/:id
 // UnProtected 
 const getUserPosts = async (req, res, next) => {
-    res.json(" Get User posts 🦊");
+    try {
+        const { id } = req.params;
+        const userPosts = await Post.find({ creator: id }).sort({ createdAt: -1 });
+        if (!userPosts) {
+            return next(new HttpError('No posts found', 404));
+        }
+        res.status(200).json(userPosts);
+    } catch (error) {
+        return next(new HttpError(error));
+    }
 }
+
+
+
 
 // Edit Post
 // Patch: api/posts/:id
