@@ -55,12 +55,12 @@ const createPost = async (req, res, next) => {
 // UnProtected 
 const getPosts = async (req, res, next) => {
     try {
-        const posts = await Post.find().sort({ createdAt: -1});
+        const posts = await Post.find().sort({ createdAt: -1 });
         if (!posts) {
             return next(new HttpError('No posts found', 404));
         }
         res.status(200).json(posts);
-    }catch (error) {
+    } catch (error) {
         return next(new HttpError(error));
     }
 }
@@ -76,7 +76,7 @@ const getPost = async (req, res, next) => {
             return next(new HttpError('Post not found', 404));
         }
         res.status(200).json(post);
-    }catch (error) {
+    } catch (error) {
         return next(new HttpError(error));
     }
 }
@@ -85,7 +85,16 @@ const getPost = async (req, res, next) => {
 // Get: api/posts/categories/:category
 // UnProtected 
 const getCatPosts = async (req, res, next) => {
-    res.json(" Get Posts by Category 🦊");
+    try {
+        const { category } = req.params;
+        const catPosts = await Post.find({ category }).sort({ createdAt: -1 });
+        if (!catPosts) {
+            return next(new HttpError('No posts found', 404));
+        }
+        res.status(200).json(catPosts);
+    } catch (error) {
+        return next(new HttpError(error));
+    }
 }
 
 // Get  author posts
