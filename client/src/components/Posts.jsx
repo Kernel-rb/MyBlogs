@@ -1,11 +1,14 @@
-import React ,  {useState } from 'react'
+import React ,  {useEffect, useState } from 'react'
 import PostItem from './PostItem'
 import POSTS from '../data';
 
 
 
 const Posts = () => {
-    const [posts , setPosts] = useState(POSTS)
+    const [posts, setPosts] = useState(POSTS)
+    useEffect(() => {
+        // fetchPosts()
+    }, [])
     return (
         <section className="posts">
             {posts.length > 0 ?
