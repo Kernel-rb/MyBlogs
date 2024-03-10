@@ -1,21 +1,42 @@
 import React ,  {useEffect, useState } from 'react'
 import PostItem from './PostItem'
-import POSTS from '../data';
+import Loader from './Loader'
+import axios from 'axios'
+
 
 
 
 const Posts = () => {
-    const [posts, setPosts] = useState(POSTS)
+    const [posts, setPosts] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
     useEffect(() => {
-        // fetchPosts()
-    }, [])
+        const fetchPosts = async () => 
+        {
+            setIsLoading(true);
+            try {
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts`)
+                setPosts(res?.data)
+            } catch (error) {
+                console.log(error)
+            }
+
+            setIsLoading(false)
+        }
+        fetchPosts();
+    } , [])
+    if (isLoading) {
+        return <Loader />
+    }
+
+
     return (
         <section className="posts">
             {posts.length > 0 ?
             <div className="container posts__container">
                 {
-                    posts.map(({ id, thumbnail, category, title, description, authorID }) =>
-                    <PostItem key={id} postID={id} thumbnail={thumbnail} category={category} title={title} description={description} authorID ={authorID} />)
+                    posts.map(({ id, thumbnail, category, title, description, authorID , createdAt }) =>
+                    <PostItem key={id} postID={id} thumbnail={thumbnail} category={category} title={title} description={description} authorID ={authorID} createdAt={createdAt} />)
                 }
             </div> :  <h2 className='center'> No posts Founds 🔎 </h2>
              }
