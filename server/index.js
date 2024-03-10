@@ -14,9 +14,10 @@ const app = express();
 app.use(express.json({ extends: true }));
 app.use(express.urlencoded({ extends: true }));
 app.use(cors({ Credentials: true, origin: 'http://localhost:3000' }))
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use(upload());
-app.use("/server/uploads" , express.static(__dirname + "/uploads"));
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
